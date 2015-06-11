@@ -12,10 +12,13 @@ $btcdprice = $altjson['BTC_BTCD']['last'];
 $fibreprice = $altjson['BTC_FIBRE']['last'];
 $unityprice = $altjson['BTC_UNITY']['last'];
 $sysprice = $altjson['BTC_SYS']['last'];
+$cryptsyjsondata = file_get_contents('https://bittrex.com/api/v1.1/public/getticker?market=btc-blitz');
+$cryptsyjson = json_decode($cryptsyjsondata, true);
+$blitzprice = $cryptsyjson['result']['Last'];
 function index(){
     $response = new Services_Twilio_Twiml();
     $response->sms("Reply with one of the following keywords: 
-btc, opal, fibre, unity, sys, btcd");
+btc, opal, fibre, blitz, unity, sys, btcd");
     echo $response;
 }
 function btc(){
@@ -36,6 +39,13 @@ function fibre(){
     global $fibreprice;
     $response = new Services_Twilio_Twiml();
     $response->sms($fibreprice);
+    echo $response;
+}
+
+function blitz(){
+    global $blitzprice;
+    $response = new Services_Twilio_Twiml();
+    $response->sms($blitzprice);
     echo $response;
 }
 
@@ -78,6 +88,9 @@ switch ($result) {
         break;
     case 'btcd':
         btcd();
+        break;
+    case 'blitz':
+        blitz();
         break;
     case 'fibre':
         fibre();
